@@ -68,7 +68,7 @@ class ResBlock1D_conditional(nn.Module):
         return h + self.skip(x)
 
 
-class ConditionalUNet1D(nn.Module):
+class UNet1D(nn.Module):
     """
     A simple 1D U-Net for diffusion on line signals.
 

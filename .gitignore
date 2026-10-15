@@ -1,0 +1,7 @@
+# Python bytecode and interpreter cache directories
+__pycache__/
+*.py[cod]
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+

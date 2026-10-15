@@ -26,3 +26,27 @@ def get_sinusoidal_table(t_steps: int, t_dim: int, max_period: float = 10000.0) 
     table = torch.cat([torch.sin(args), torch.cos(args)], dim=-1)            # [t_steps, t_dim]
 
     return table
+
+
+def sinusoidal_embedding(x: torch.Tensor, dim: int, max_period: float = 10000.0) -> torch.Tensor:
+    """
+    Sinusoidal embedding of continuous values; same formula as get_sinusoidal_table,
+    but evaluated at arbitrary (non-integer) x instead of looked up by row.
+
+    Args:
+        x         : shape [B], float values (e.g., a scaled scalar condition)
+        dim       : embedding dimension (must be even)
+        max_period: controls the minimum frequency (default 10000)
+
+    Returns:
+        emb : shape [B, dim]
+    """
+    assert dim % 2 == 0, "dim must be even"
+
+    half = dim // 2
+    freqs = torch.exp(
+        -math.log(max_period) * torch.arange(half, dtype=torch.float32, device=x.device) / half
+    )                                                                        # [half]
+
+    args = x.float()[:, None] * freqs[None, :]                               # [B, half]
+    return torch.cat([torch.sin(args), torch.cos(args)], dim=-1)             # [B, dim]
